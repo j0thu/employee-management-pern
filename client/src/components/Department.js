@@ -1,11 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import {Table} from 'react-bootstrap'; 
+import Button from 'react-bootstrap/Button';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
+import AddDepModal from './AddDepModal';
 
 export default class Department extends Component {
 
     constructor(props){
         super(props);
-        this.state = {deps: []};
+        this.state = {deps: [], addModalShow: false}; //Add modal will initially be false
     }
 
     async refreshList(){
@@ -24,7 +27,9 @@ export default class Department extends Component {
 
     render() {
         const {deps} = this.state; //to use the state, you should do this
+        let addModalClose = ()=> this.setState({addModalShow: false}) //While closing the modal, we set it to false
         return (
+            <Fragment>
             <Table className="mt-4" striped bordered hover size="sm">
                 <thead>
                     <tr>
@@ -41,6 +46,12 @@ export default class Department extends Component {
                     )}
                 </tbody>    
             </Table>
+            <ButtonToolbar>
+                <Button variant="primary" onClick={()=>this.setState({addModalShow:true})}>Add Department</Button>
+            </ButtonToolbar> 
+            
+            <AddDepModal show={this.state.addModalShow} onHide = {addModalClose}/>  { /*The component will be shown if the addModalShow is true else, its false*/}
+            </Fragment>
         )
     }
 }
