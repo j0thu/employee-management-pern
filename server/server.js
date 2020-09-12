@@ -18,10 +18,21 @@ app.get('/', (req, res)=>{
 
 app.get('/department', async(req, res)=>{
     try {
-        const dep_details = await pool.query('SELECT * FROM tbldepartment');
+        const dep_details = await pool.query('SELECT * FROM public.tbldepartment');
         res.json(dep_details.rows);
     }
     catch (err) {
+        console.error(err);
+    }
+})
+
+app.post('/department', async(req, res)=>{
+    try {
+        const {department} = req.body;
+        const newDepartment = await pool.query('INSERT INTO public.tbldepartment (departmentname) VALUES($1) RETURNING *', [department]);
+        res.json(newDepartment.row);
+    }
+    catch(err){
         console.error(err);
     }
 })

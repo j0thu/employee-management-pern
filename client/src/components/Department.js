@@ -25,6 +25,10 @@ export default class Department extends Component {
         this.refreshList();
     }
 
+    componentDidUpdate(){
+        this.refreshList();
+    }
+
     render() {
         const {deps} = this.state; //to use the state, you should do this
         let addModalClose = ()=> this.setState({addModalShow: false}) //While closing the modal, we set it to false
@@ -39,9 +43,9 @@ export default class Department extends Component {
                 </thead>
                 <tbody>
                     {deps.map(dep=>
-                    <tr key={dep.departmentID}>
-                    <td>{dep.departmentID}</td>
-                    <td>{dep.departmentName}</td>
+                    <tr key={dep.departmentiD}>
+                    <td>{dep.departmentid}</td>
+                    <td>{dep.departmentname}</td>
                     </tr>   
                     )}
                 </tbody>    

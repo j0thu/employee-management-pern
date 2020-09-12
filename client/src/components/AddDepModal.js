@@ -1,23 +1,29 @@
-import React, { Component } from 'react';
+import React, {useState } from 'react';
 import {Modal, Button, Row, Col, Form} from 'react-bootstrap';
 
 
- class AddDepModal extends Component {
-    constructor(props){
-        super(props);
-    }
+const AddDepModal = (props)=>{
 
-    handleSubmit(event){
-      event.preventDefault();
-      alert(event.target.DepartmentName.value);
-      
+  const [department, setDepartment] = useState("");
+
+  const onSubmitForm = async(e)=>{
+      e.preventDefault();
+      try {
+          const body = {department};
+          const response = await fetch("http://localhost:5000/department", {
+              method: "POST",
+              headers: {"Content-Type": "application/json"},
+              body: JSON.stringify(body),
+          });
+          // console.log(response);
+          window.location = "/department";
+      } catch (err) {
+          console.error(err);
       }
-
-
-    render() {
+  }
         return (
             <Modal
-            {...this.props}
+            {...props}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -31,13 +37,15 @@ import {Modal, Button, Row, Col, Form} from 'react-bootstrap';
               <div className='container'>
                 <Row>
                   <Col sm={6}>
-                    <Form onSubmit = {this.handleSubmit}>
+                    <Form onSubmit = {onSubmitForm}>
                       <Form.Group controlID = "DepartmentName">
                          <Form.Label>DepartmentName</Form.Label>
-                         <Form.Control type="text" name="DepartmentName" required placeholder="Department Name"/>
+                         <Form.Control type="text" name="DepartmentName" required placeholder="Department Name" onChange={e=>{
+                           setDepartment(e.target.value);
+                         }}/>
                       </Form.Group>
                       <Form.Group>
-                        <Button variant="secondary" type="submit">Add</Button>
+                        <Button variant="secondary" type="submit" onClick={props.onHide}>Add</Button>
                       </Form.Group>
                     </Form>
                   </Col>
@@ -45,12 +53,11 @@ import {Modal, Button, Row, Col, Form} from 'react-bootstrap';
               </div> 
             </Modal.Body>
             <Modal.Footer>
-              <Button variant ="danger" onClick={this.props.onHide}>Close</Button>
+              <Button variant ="danger" onClick={props.onHide}>Close</Button>
             </Modal.Footer>
           </Modal>
   
         )
     }
-}
 
 export default AddDepModal;
