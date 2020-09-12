@@ -37,9 +37,24 @@ app.post('/department', async(req, res)=>{
     }
 })
 
+app.put('/department/:id', async(req, res)=>{
+    try {
+        console.log(req.body);
+        const {id} = req.params;
+        const {department} = req.body;
+        const updatedDep = await pool.query('UPDATE public.tbldepartment SET department = $1 WHERE departmentid = $2', [department, id]);
+        res.json('Updated The Data');
+    }
+    catch(err) {
+       console.error(err);
+    }
+})
+
 app.get('/employee', (req, res)=>{
     res.send('Employees')
 })
+
+
 
 PORT = 5000;
 app.listen(PORT, ()=>{

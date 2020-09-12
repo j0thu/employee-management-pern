@@ -3,12 +3,14 @@ import {Table} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import AddDepModal from './AddDepModal';
+import EditDepModal from './EditDepModal';
+
 
 export default class Department extends Component {
 
     constructor(props){
         super(props);
-        this.state = {deps: [], addModalShow: false}; //Add modal will initially be false
+        this.state = {deps: [], addModalShow: false, editModalShow:false, depid:"", depname:""}; //Add modal will initially be false
     }
 
     async refreshList(){
@@ -16,7 +18,8 @@ export default class Department extends Component {
             const response = await fetch('http://localhost:5000/department');
             const jsonData = await response.json();
             this.setState({deps: jsonData});
-        } catch(err) {
+        } 
+        catch(err) {
             console.log(err);
         }
     }
@@ -30,8 +33,10 @@ export default class Department extends Component {
     }
 
     render() {
-        const {deps} = this.state; //to use the state, you should do this
+        const {deps, depid, depname} = this.state; //to use the state, you should do this
         let addModalClose = ()=> this.setState({addModalShow: false}) //While closing the modal, we set it to false
+        let editModalClose = ()=> this.setState({editModalShow: false});
+        
         return (
             <Fragment>
             <Table className="mt-4" striped bordered hover size="sm">
@@ -39,13 +44,22 @@ export default class Department extends Component {
                     <tr>
                         <th>Department ID</th>
                         <th>Department Name</th>
+                        <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
                     {deps.map(dep=>
-                    <tr key={dep.departmentiD}>
+                    <tr key={dep.departmentid}>
                     <td>{dep.departmentid}</td>
                     <td>{dep.departmentname}</td>
+                    <td>
+                        <ButtonToolbar>
+                            <Button className="mr-2" variant ="info" onClick = {()=> this.setState({editModalShow:true, depid:dep.departmentid, depname:dep.departmentname})}>
+                                Edit
+                            </Button>
+                            <EditDepModal show={this.state.editModalShow} onHide = {editModalClose} depid = {this.state.depid} depname = {this.state.depname} /> {/*These are from this.state.depid/depname*/}
+                        </ButtonToolbar>
+                    </td>
                     </tr>   
                     )}
                 </tbody>    
