@@ -32,6 +32,15 @@ export default class Department extends Component {
         this.refreshList();
     }
 
+    deleteDep(depid){
+        if(window.confirm('Are You Sure You Want To Delete?')){
+            fetch(`http://localhost:5000/department/${depid}`, {
+                method: 'DELETE',
+                headers:{'Content-Type':'application/json'},
+            })
+        }
+    }
+
     render() {
         const {deps, depid, depname} = this.state; //to use the state, you should do this
         let addModalClose = ()=> this.setState({addModalShow: false}) //While closing the modal, we set it to false
@@ -54,8 +63,13 @@ export default class Department extends Component {
                     <td>{dep.departmentname}</td>
                     <td>
                         <ButtonToolbar>
+                            {/*Edit Button*/}
                             <Button className="mr-2" variant ="info" onClick = {()=> this.setState({editModalShow:true, depid:dep.departmentid, depname:dep.departmentname})}>
                                 Edit
+                            </Button>
+                            {/*Delete Button*/}
+                            <Button className="mr-2" variant ="danger" onClick = {()=> this.deleteDep(dep.departmentid)}>
+                                Delete
                             </Button>
                             <EditDepModal show={this.state.editModalShow} onHide = {editModalClose} depid = {this.state.depid} depname = {this.state.depname} /> {/*These are from this.state.depid/depname*/}
                         </ButtonToolbar>

@@ -1,4 +1,4 @@
-import React, {useState, Fragment} from 'react';
+import React, {useState, Fragment, useEffect} from 'react';
 import {Modal, Button, Row, Col, Form} from 'react-bootstrap';
 
 import Snackbar from '@material-ui/core/Snackbar';
@@ -14,6 +14,11 @@ const EditDepModal= (props)=>{
     const snackBarClose = (event)=>{
       setsnackbaropen(false);
     }
+
+    useEffect(()=>{
+      setdepartmentid(props.depid);
+    })
+
 
     const updateForm = async(e)=>{
         e.preventDefault();

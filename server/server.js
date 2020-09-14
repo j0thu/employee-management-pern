@@ -37,16 +37,26 @@ app.post('/department', async(req, res)=>{
     }
 })
 
-app.put('/department/:id', async(req, res)=>{
+app.put('/department', async(req, res)=>{
     try {
-        console.log(req.body);
-        const {id} = req.params;
-        const {department} = req.body;
-        const updatedDep = await pool.query('UPDATE public.tbldepartment SET department = $1 WHERE departmentid = $2', [department, id]);
+        // console.log(req.body);
+        const {DepartmentID, DepartmentName} = req.body;
+        const updatedDep = await pool.query('UPDATE public.tbldepartment SET departmentname = $1 WHERE departmentid = $2', [DepartmentName, DepartmentID]);
         res.json('Updated The Data');
     }
     catch(err) {
        console.error(err);
+    }
+})
+
+app.delete('/department/:id', async(req, res)=>{
+    const {id} = req.params;
+    try {
+        const deleteDep = await pool.query('DELETE FROM public.tbldepartment WHERE departmentid = $1', [id]);
+        res.json('Deleted Successfully');
+    }
+    catch(err){
+        console.error(err);
     }
 })
 
