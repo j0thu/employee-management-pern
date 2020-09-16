@@ -41,7 +41,8 @@ export default class Employee extends Component {
     }
 
     render() {
-        const {emps, empid, empname, empdep, empdoj, empmail} = this.state; //to use the state, you should do this
+        // const {emps, empid, empname, empdep, empdoj, empmail} = this.state; //to use the state, you should do this
+        const {emps} = this.state;
         let addModalClose = ()=> this.setState({addModalShow: false}) //While closing the modal, we set it to false
         let editModalClose = ()=> this.setState({editModalShow: false});
         return (
@@ -96,3 +97,4 @@ export default class Employee extends Component {
         )
     }
 }
+                                                                         

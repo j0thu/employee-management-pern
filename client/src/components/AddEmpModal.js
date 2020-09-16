@@ -13,6 +13,7 @@ const AddEmpModal = (props)=>{
   const [snackbaropen, setsnackbaropen] = useState(false);
   const [snackbarmsg, setsnackbarmsg] = useState('');
 
+  const [selectDepartment, setselectDepartment] = useState("Select Department");
   const [departmentdetails, setdepartmentdetails] = useState([]);
 
   useEffect(()=>{
@@ -21,7 +22,7 @@ const AddEmpModal = (props)=>{
     .then(data=>{
       setdepartmentdetails(data);
     })
-  })
+  }, []);
 
   const snackBarClose = (event)=>{
     setsnackbaropen(false);
@@ -62,7 +63,7 @@ const AddEmpModal = (props)=>{
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Add Department Details
+                Add Employee Details
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -79,21 +80,29 @@ const AddEmpModal = (props)=>{
 
                       <Form.Group controlID = "EmployeeDep">
                          <Form.Label>Employee Department</Form.Label>
-                         <Form.Control type="text" name="EmployeeDep" required placeholder="Employee Department" onChange={e=>{
-                           setemployeedep(e.target.value);
-                         }}/>
+                        <Form.Control as ="select" onChange = {e=>{
+                          setemployeedep(e.target.value);
+                        }}>
+                          <option>{selectDepartment}</option>
+                         {departmentdetails.map(dep=>(
+                           
+                            <option key = {dep.departmentid}>{dep.departmentname}</option>
+                          
+                         ))}
+                        </Form.Control>  
+                         
                       </Form.Group>
 
                       <Form.Group controlID = "EmployeeMail">
                          <Form.Label> E-Mail </Form.Label>
-                         <Form.Control type="text" name="EmployeeDep" required placeholder="Employee Department" onChange={e=>{
+                         <Form.Control type="text" name="EmployeeDep" required placeholder="Employee E-mail" onChange={e=>{
                            setemployeemail(e.target.value);
                          }}/>
                       </Form.Group>
 
                       <Form.Group controlID = "EmployeeDoj">
                          <Form.Label>Date of Join</Form.Label>
-                         <Form.Control type="text" name="EmployeeDoj" required placeholder="Date Of Join" onChange={e=>{
+                         <Form.Control type="date" name="EmployeeDoj" required placeholder="Date Of Join" onChange={e=>{
                            setemployeedoj(e.target.value);
                          }}/>
                       </Form.Group>
@@ -113,5 +122,10 @@ const AddEmpModal = (props)=>{
           </Fragment>
         )
     }
+
+    
+  
+
+    
 
 export default AddEmpModal;

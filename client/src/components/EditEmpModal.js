@@ -6,45 +6,55 @@ import IconButton from '@material-ui/core/IconButton';
 
 
 const EditEmpModal= (props)=>{
-    const [employeeid, setemployeeid]= useState("");
-    const [employeename, setemployeename] = useState("");
-    const [employeedep, setemployeedep] = useState("");
-    const [employeemail, setemployeemail] = useState("");
-    const [employeedoj, setemployeedoj] = useState("");
+    
+    const[departmentdetails, setdepartmentdetails] = useState([]);
+    const [selectDepartment, setselectDepartment] = useState("Select Department");
+    
+    const [employeename, setemployeename] = useState(props);
+    const [employeedep, setemployeedep] = useState(props);
+    const [employeemail, setemployeemail] = useState(props);
+    const [employeedoj, setemployeedoj] = useState(props);
 
     const [snackbaropen, setsnackbaropen] = useState(false);
     const [snackbarmsg, setsnackbarmsg] = useState('');
   
+    
       const snackBarClose = (event)=>{
         setsnackbaropen(false);
       }
-  
       useEffect(()=>{
-        setemployeeid(props.empid);
-        // setemployeename(props.empname);
-        // setemployeedep(props.empdep);
-        // setemployeemail(props.empmail);
-        // setemployeedoj(props.empdoj);
+        setemployeename(props.empname);
+      }, [props.empname])
+      useEffect(()=>{
+        setemployeedep(props.empdep);
+      }, [props.empdep])
+      useEffect(()=>{
+        setemployeemail(props.empmail);
+      }, [props.empmail])
+      useEffect(()=>{
+        setemployeedoj(props.empdoj);
+      }, [props.empdoj])
+
+      useEffect(()=>{
+        fetch('http://localhost:5000/department')
+        .then(response => response.json())
+        .then(data=>{
+          setdepartmentdetails(data);
+        })
       }, []);
-  
-  
+      
       const updateForm = async(e)=>{
           e.preventDefault();
           try {
-              const EmployeeID= employeeid;
-              const EmployeeName = employeename;
-              const EmployeeDep = employeedep;
-              const EmployeeMail = employeemail;
-              const EmployeeDoj = employeedoj;
               const response = await fetch('http://localhost:5000/employee', {
                   method: "PUT",
                   headers: {"Content-Type":"application/json"},
                   body: JSON.stringify({
-                      EmployeeID:EmployeeID,
-                      EmployeeName: EmployeeName,
-                      EmployeeDep:EmployeeDep,
-                      EmployeeMail:EmployeeMail,
-                      EmployeeDoj:EmployeeDoj
+                      EmployeeID:props.empid,
+                      EmployeeName: employeename,
+                      EmployeeDep:employeedep,
+                      EmployeeMail:employeemail,
+                      EmployeeDoj:employeedoj
                   }),
               });
               setsnackbaropen(true);
@@ -86,7 +96,7 @@ const EditEmpModal= (props)=>{
                           <Form.Control type="text" name="EmployeeID" required disabled placeholder="Employee ID" defaultValue = {props.empid} />
                         </Form.Group>
   
-                        <Form.Group controlID = "DepartmentName">
+                        <Form.Group controlID = "EmployeeName">
                           <Form.Label>Employee Name</Form.Label>
                           <Form.Control type="text" name="EmployeeName" required placeholder="Employee Name" defaultValue={props.empname} onChange={e=>{
                             setemployeename(e.target.value);
@@ -95,9 +105,15 @@ const EditEmpModal= (props)=>{
 
                         <Form.Group controlID = "EmployeeDepartment">
                           <Form.Label>Employee Department</Form.Label>
-                          <Form.Control type="text" name="EmployeeDep" required placeholder="Employee Department" defaultValue={props.empdep} onChange={e=>{
-                            setemployeedep(e.target.value);
-                          }}/>
+                          <Form.Control as ="select" onChange = {e=>{
+                          setemployeedep(e.target.value);
+                        }}>
+                          <option>{props.empdep}</option>
+
+                         {departmentdetails.map(dep=>
+                            <option key = {dep.departmentid}>{dep.departmentname}</option>
+                          )}
+                        </Form.Control> 
                         </Form.Group>
 
                         <Form.Group controlID = "EmployeeMail">
@@ -109,7 +125,7 @@ const EditEmpModal= (props)=>{
 
                         <Form.Group controlID = "EmployeeDOJ">
                           <Form.Label>Employee Date of Join</Form.Label>
-                          <Form.Control type="text" name="EmployeeDoj" required placeholder="Employee DOJ" defaultValue={props.empdoj} onChange={e=>{
+                          <Form.Control type="date" name="EmployeeDoj" required placeholder="Employee DOJ" defaultValue={props.empdoj} onChange={e=>{
                             setemployeedoj(e.target.value);
                           }}/>
                         </Form.Group>
