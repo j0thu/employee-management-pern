@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 const EditEmpModal= (props)=>{
     
     const[departmentdetails, setdepartmentdetails] = useState([]);
-    const [selectDepartment, setselectDepartment] = useState("Select Department");
+    // const [selectDepartment, setselectDepartment] = useState("Select Department");
     
     const [employeename, setemployeename] = useState(props);
     const [employeedep, setemployeedep] = useState(props);
